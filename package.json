@@ -1,0 +1,23 @@
+{
+  "name": "riot-webpack-babel-template",
+  "version": "1.0.0",
+  "description": "Riotjs webpack template",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --hot --inline --content-base app"
+  },
+  "author": "Gianluca Guarini <gianluca.guarini@gmail.com> (http://gianlucaguarini.com/)",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.3.26",
+    "babel-loader": "^6.2.0",
+    "babel-preset-es2015-riot": "^1.0.1",
+    "tag-loader": "^0.3.0",
+    "webpack": "^1.12.9",
+    "webpack-dev-server": "^1.14.0"
+  },
+  "dependencies": {
+    "moment": "^2.10.6",
+    "riot": "^2.3.12"
+  }
+}
