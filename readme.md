@@ -1,4 +1,4 @@
-# Riot webpack es6 babel template
+# Riot webpack babel template
 
 ## run
 
