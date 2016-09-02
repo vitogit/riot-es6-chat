@@ -15,7 +15,11 @@ module.exports = {
       {
         test: /\.js?$/,
         loader: 'babel-loader',
-        exclude: /(node_modules|bower_components)/
+        exclude: /(node_modules|bower_components)/,
+        include: [
+          path.resolve(__dirname, "app/assets/**/*")
+          
+        ]       
       },
       {
         test: /\.tag?$/,
