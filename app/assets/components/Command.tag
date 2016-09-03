@@ -1,38 +1,36 @@
 
 <Command class="command">
- 
+
   <form onsubmit={add}>
-    <!-- <input type="text" placeholder="Say something..."name="input_text"/>
-    <input type="submit" value="Post" />
-     -->
-    <span class='prompt'>></span>
-    <input autofocus="true" id="promptStr" autocomplete="off">
-    
+    <span id='prompt'>{this.prompt}</span>
+    <input autofocus="true" id="messageText" autocomplete="off">
   </form>
 
   <script>
-    import { colorize, escapeHTML } from '../js/lib/html-helpers'
-    import { boldRed, boldGreen, gray } from '../js/lib/colors'
-    this.author = 'me'
-    this.add = function(e) {
-      console.log('_____')
-      e.preventDefault()
-      var author =  opts.author || this.author
-      var promptStr = this.promptFormatted(this.prompt)
-      if (promptStr && author) {
-        riot.messageStore.trigger('add_message', {author: author, text: promptStr})
-        this.promptStr.value = ''
-      }
-    }    
+    // import { colorize, escapeHTML } from '../js/lib/html-helpers'
+    // import { boldRed, boldGreen, gray } from '../js/lib/colors'
 
-    this.promptFormatted = (optionalStr = '') => {
-      console.log('optionalStr__'+optionalStr)
-      return colorize(escapeHTML(this.composedPrompt()));
+    this.author = opts.author || 'me'
+    this.prompt = opts.prompt || '>'
+
+    this.add = function(e) {
+      e.preventDefault()
+      var messageText = this.messageText.value.trim()
+      if (messageText && this.author) {
+        console.log('thismess____'+messageText)
+        riot.messageStore.trigger('add_message', {author: this.author, text: messageText})
+        this.messageText.value = ''
+      }
     }
-    
-    this.composedPrompt = (optionalStr = '') => {
-      return `${this.promptStr} > ${optionalStr}`.trim();
-    }
+
+    // this.promptFormatted = (optionalStr = '') => {
+    //   console.log('optionalStr__'+optionalStr)
+    //   return colorize(escapeHTML(this.composedPrompt()));
+    // }
+    //
+    // this.composedPrompt = (optionalStr = '') => {
+    //   return `${this.promptStr} > ${optionalStr}`.trim();
+    // }
 
   </script>
 </Command>
