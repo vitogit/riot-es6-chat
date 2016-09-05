@@ -9,6 +9,10 @@
     const self = this
 
     this.space =  false
+
+    this.on('mount', function() {
+      this.addLine(gray('Connecting...'))
+    })
     
     this.addLine = (line) => {
       riot.messageStore.trigger('add_message', {author: '', text: colorize(escapeHTML(line))})
@@ -85,5 +89,9 @@
   //     fn(formData);
   //   });
   // }
+  
+   //
+   
+  
   </script>
 </Client>

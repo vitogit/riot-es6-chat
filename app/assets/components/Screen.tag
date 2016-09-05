@@ -9,15 +9,20 @@
     riot.messageStore.on('add_message', function(message) {
       self.messages.push(message)
       self.update()
+    })
+    
+    riot.messageStore.on('add_message_chat', function(message) {
       // this.lines.push(colorize(escapeHTML(line)));
-      // this.scrollToBottom();      
+      self.messages.push(message)
+      self.update()
+      // this.scrollToBottom();
     })
   </script>
 </Screen>
 
 <Message>
   <div class="message">
-    <span class="messageAuthor"> {opts.author}</span><br/>
+    <!-- <span class="messageAuthor"> {opts.author}</span><br/> -->
     <span> <RawHtml content={opts.text}/></RawHtml> </span>
   </div>
 
