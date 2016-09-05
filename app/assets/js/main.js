@@ -6,6 +6,7 @@ import MessageStore from '../components/MessageStore.js';
 import '../components/Client.tag'
 import '../components/Command.tag'
 import '../components/Screen.tag'
+import '../components/RawHtml.tag'
 
 import '../js/lib/linkify'
 import '../js/lib/linkify-html'
