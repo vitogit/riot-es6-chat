@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "riot": "^2.3.12",
-    "ansi_up": "^1.3.0"
+    "ansi_up": "^1.3.0",
+    "socket.io-client": "^1.4.8"
   }
 }
