@@ -63,16 +63,11 @@
     }
 
     this.onSetPrompt = (str) => {
-      self.setPrompt(str);
+      riot.messageStore.trigger('set_prompt', str)      
     }
 
     this.onRequestInput = (inputs, fn) => {
-      console.log('onrequestinput____'+inputs)
-      // const promptWas = this.promptStr;
-      riot.messageStore.trigger('input_from_user', {}, inputs, formData => {
-        this.setPrompt('promptWas', 'text');
-        fn(formData);
-      })
+      riot.messageStore.trigger('input_from_user', {}, inputs, fn)
     }
 
     this.onLogin = () => {

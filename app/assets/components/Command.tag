@@ -2,38 +2,45 @@
 <Command class="command">
 
   <form onsubmit = {sendCommand}>
-    <span id='prompt'>{this.prompt}</span>
+    <span type={this.prompt.type} id="prompt"> {this.prompt.label}</span>
     <input autofocus id="messageText" autocomplete="off">
   </form>
 
   <script>
-    // import { colorize, escapeHTML } from '../js/lib/html-helpers'
+    import { colorize, escapeHTML } from '../js/lib/html-helpers'
     // import { boldRed, boldGreen, gray } from '../js/lib/colors'
     const self = this
     this.author = opts.author || 'me'
-    this.prompt = opts.prompt || '>'
+    this.prompt = {label: '>', type: 'text'}
+    this.promptStr = opts.prompt || '>'
     this.echo = false
     this.inputType = 'text'
     this.inputCallback = null;
     
-    riot.messageStore.on('input_from_user', function(data, inputs, done) {
-      console.log('input_from_user____'+data)
-      console.log('2input_from_user____'+inputs)
-      console.log('3input_from_user____'+done)
-      
-      self.getInputFromUser(data, inputs, done)
+    //todo: should refactor interaction between fn and getinputfromuser
+    riot.messageStore.on('input_from_user', function(data, inputs, fn) {
+      const promptWas = self.prompt
+      self.getInputFromUser({}, inputs, formData => {
+        self.setPrompt(promptWas, 'text');
+        fn(formData);
+      })
+      //restore original prompt
+      self.prompt = promptWas
     })
     
+    riot.messageStore.on('set_prompt', function(str) {
+      self.setPrompt(str)
+    })    
+    
     this.add = function(msg) {
-      console.log("add________")
       riot.messageStore.trigger('add_message', {author: this.author, text: msg})
     }
 
     this.sendCommand = (e) => {
       e.preventDefault()
-      console.log('sendcommand____')
       
       var command = this.messageText.value.trim()
+
       if (!command) { return; }
       this.echoCommand(command)
       // this.addToHistory(command);
@@ -43,7 +50,6 @@
       } else if (!riot.socket.connected) {
         this.add(boldRed('Not connected.'));
       } else if (this.inputCallback) {
-        console.log('calling inputcallback')
         this.handleInputCallback(command);
       } else {
         riot.socket.emit('input', command);
@@ -55,14 +61,12 @@
 
     //todo: move this functions to a lib.js ?
     this.echoCommand = (command) => {
-      console.log('echocommand')
       if (!this.echo || this.inputType === 'password') { return; }
       this.add(this.composedPrompt(command));
       if (this.space) { this.add(' '); }
     }
   
     this.handleClientCommand = (command) => {
-      console.log('handleClientCommand____'+command)
       switch (command) {
         case '.clear': this.lines([]); return true;
         case '.connect': this.reconnectSocket(); return true;
@@ -77,38 +81,35 @@
       }
     }
 
+    this.handleInputCallback = command => {
+      const callback = this.inputCallback;
+      this.inputCallback = null;
+      callback(command);
+    }
+  
     this.getInputFromUser = (data, inputs, done) => {
-      console.log('1_____'+data)
-      if (inputs.length === 0) { done(data); return; }
-      console.log('2_____'+inputs)
+      if (inputs.length === 0) {done(data); return;}
 
       const [input, ...restInputs] = inputs;
-      console.log('3_____'+input)
-
       this.setPrompt(input.label || 'input', input.type || 'text');
-      console.log('3_____'+input)
-
+      data[input.name || 'input'] = input;
+      
+      
       this.inputCallback = userInput => {
         data[input.name || 'input'] = userInput;
         this.getInputFromUser(data, restInputs, done);
       };
     }
   
-    // this.promptFormatted = (optionalStr = '') => {
-    //   console.log('optionalStr__'+optionalStr)
-    //   return colorize(escapeHTML(this.composedPrompt()));
-    // }
-    //
-    
-    //todo: not working properly
-    this.composedPrompt = (optionalStr = '') => {
-      console.log("composedPromp________")
-      return `${this.promptStr} > ${optionalStr}`.trim();
+    this.composedPrompt = (promptStr, optionalStr = '') => {
+      return `${promptStr} > ${optionalStr}`.trim();
     }
 
-    this.setPrompt = (str, type) => {
-      this.prompt = str;
-      if (type) { this.inputType = type; }
+    this.setPrompt = (label, type) => {
+      this.prompt.label = label + '>' //todo: use composedPrompt(label)
+      this.prompt.type = type || 'text'
+      this.update()
+
     }
   </script>
 </Command>
