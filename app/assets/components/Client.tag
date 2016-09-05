@@ -8,8 +8,10 @@
     
     const self = this
 
-    this.space =  false
-
+    this.space = false
+    this.loggedIn = false
+    this.playing = false
+    
     this.on('mount', function() {
       this.addLine(gray('Connecting...'))
     })
@@ -17,81 +19,97 @@
     this.addLine = (line) => {
       riot.messageStore.trigger('add_message', {author: '', text: colorize(escapeHTML(line))})
     }
-    
-    // Socket event handlers to implement
-    riot.socket.on('connect', function() {  
+
+    //socket event handlers
+    this.onConnect = () => {  
       self.addLine(boldGreen('Connected!'))
-    });
+    }
     
-    riot.socket.on('connecting', function() {  
+    this.onConnecting = () => {  
       self.addLine(gray('Connecting...'))
-    });
-    
-    riot.socket.on('disconnect', function() {  
+    }
+
+    this.onDisconnect = () => {  
       self.addLine(boldRed('Disconnected from server.'));
       self.setPrompt('');
       self.inputCallback = null;
       self.loggedIn(false);
       self.playing(false);
-    }); 
-    
-    riot.socket.on('connect_failed', function() {  
+    }
+
+    this.onConnectFailed = () => {  
       self.addLine(boldRed('Connection to server failed.'))
-    });
-    
-    riot.socket.on('error', function() {  
+    }
+
+    this.onError = () => {  
       self.addLine(boldRed('An unknown error occurred.'));
-    });
-    
-    riot.socket.on('output', function(msg) {  
+    }
+
+    this.onReconnectFailed = () => {  
+      self.addLine(boldRed('Unable to reconnect to server.'));
+    }
+
+    this.onReconnect = () => {  
+    }
+
+    this.onReconnecting = () => {  
+    }
+
+    this.onOutput = (msg) => {  
       if (msg && msg.toString) {
         self.addLine(msg.toString());
         if (self.space) { self.addLine(' '); }
       }
-    });       
-            
-    riot.socket.on('set-prompt', function(str) {  
+    }
+
+    this.onSetPrompt = (str) => {
       self.setPrompt(str);
-    });
+    }
 
+    this.onRequestInput = (inputs, fn) => {
+      console.log('onrequestinput____'+inputs)
+      // const promptWas = this.promptStr;
+      riot.messageStore.trigger('input_from_user', {}, inputs, formData => {
+        this.setPrompt('promptWas', 'text');
+        fn(formData);
+      })
+    }
 
-  // Socket event handlers to implement
+    this.onLogin = () => {
+      this.loggedIn = true;
+    }
 
+    this.onLogout = () => {
+      this.loggedIn = false;
+    }
 
-  // onEditVerb(data) {
-  //   this.parentViewModel.parentViewModel.newEditVerbTab(this.socket, data);
-  // }
-  // 
-  // onEditFunction(data) {
-  //   this.parentViewModel.parentViewModel.newEditFunctionTab(this.socket, data);
-  // }
-  // 
-  // onLogin() {
-  //   this.loggedIn(true);
-  // }
-  // 
-  // onLogout() {
-  //   this.loggedIn(false);
-  // }
-  // 
-  // onPlaying() {
-  //   this.playing(true);
-  // }
-  // 
-  // onQuit() {
-  //   this.playing(false);
-  // }
-  // 
-  // onRequestInput(inputs, fn) {
-  //   const promptWas = this.promptStr();
-  //   this.getInputFromUser({}, inputs, formData => {
-  //     this.setPrompt(promptWas, 'text');
-  //     fn(formData);
-  //   });
-  // }
-  
-   //
-   
+    this.onPlaying = () => {
+      this.playing = true;
+    }
+
+    this.onQuit = () => {
+      this.playing = false ;
+    }
+
+    // Socket event handlers
+    riot.socket.on('connect', self.onConnect.bind(this));
+    riot.socket.on('connecting', self.onConnecting.bind(this));
+    riot.socket.on('disconnect', self.onDisconnect.bind(this));
+    riot.socket.on('connect_failed', self.onConnectFailed.bind(this));
+    riot.socket.on('error', self.onError.bind(this));
+    riot.socket.on('reconnect_failed', self.onReconnectFailed.bind(this));
+    riot.socket.on('reconnect', self.onReconnect.bind(this));
+    riot.socket.on('reconnecting', self.onReconnecting.bind(this));
+    riot.socket.on('output', self.onOutput.bind(this));
+    riot.socket.on('set-prompt', self.onSetPrompt.bind(this));
+    riot.socket.on('request-input', self.onRequestInput.bind(this));
+    // riot.socket.on('edit-verb', self.onEditVerb.bind(this));
+    // riot.socket.on('edit-function', self.onEditFunction.bind(this));
+    riot.socket.on('login', self.onLogin.bind(this));
+    riot.socket.on('logout', self.onLogout.bind(this));
+    riot.socket.on('playing', self.onPlaying.bind(this));
+    riot.socket.on('quit', self.onQuit.bind(this));
+
   
   </script>
 </Client>
