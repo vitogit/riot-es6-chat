@@ -3,7 +3,7 @@
 
   <form onsubmit={add}>
     <span id='prompt'>{this.prompt}</span>
-    <input autofocus="true" id="messageText" autocomplete="off">
+    <input autofocus id="messageText" autocomplete="off">
   </form>
 
   <script>
