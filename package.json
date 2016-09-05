@@ -1,12 +1,12 @@
 {
-  "name": "riot-webpack-babel-template",
+  "name": "riot-es6-chat",
   "version": "1.0.0",
-  "description": "Riotjs webpack template",
+  "description": "Riotjs chat",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --hot --inline --content-base app"
   },
-  "author": "Gianluca Guarini <gianluca.guarini@gmail.com> (http://gianlucaguarini.com/)",
+  "author": "vitomd (http://vitomd.com/)",
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.3.26",
