@@ -1,13 +1,12 @@
 <Screen class="screen">
-  <div class="messageList" each={message in messages} >
-    <Message author='{message.author}' text='{message.text}'/>
+  <div class="messageList"  >
+    <Message author='{message.author}' text='{message.text}' each={message in messages}/>
   </div>
 
   <script>
     this.messages = opts.messages || []
     var self = this
     riot.messageStore.on('add_message', function(message) {
-      console.log('add_message______'+message)
       self.messages.push(message)
       self.update()
     })
