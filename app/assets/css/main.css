@@ -223,19 +223,19 @@ body {
   overflow: auto;
 }
 
-.search .results ol {
+.search .results .searchSelect {
   margin: 0;
   padding: 0;
 }
 
-.search .results ol li {
+.search .results .searchSelect .searchOption {
   list-style-type: none;
   padding: 1em 0.5em;
   color: #545657;
   background-color: black;
 }
 
-.search .results ol li.active {
+.search .results .searchSelect .searchOption.active {
   color: white;
   background-color: #141516;
 }

@@ -2,7 +2,8 @@
   <Screen />
   <Command />
   <SearchModal show={this.searchModalOn} />
-
+  
+  
   <script>
     import { colorize, escapeHTML } from '../js/lib/html-helpers'
     import { boldRed, boldGreen, gray } from '../js/lib/colors'
