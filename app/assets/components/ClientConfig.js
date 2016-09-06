@@ -1,5 +1,5 @@
 'use strict'
-
+//todo: move this from components to another place?
 class ClientConfig {
   constructor() {
   }

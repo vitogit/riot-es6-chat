@@ -14,10 +14,12 @@
     this.playing = false
 
     // client config
+    // todo: maybe move this to the command component
     this.maxLines = clientConfig.read('maxLines') || 1000
     this.maxHistory = clientConfig.read('maxHistory') || 1000
     this.echo = clientConfig.read('echo') || false
     this.space = clientConfig.read('space') || false
+    //todo: implement watching the client config changes
 
 
     this.on('mount', function() {
