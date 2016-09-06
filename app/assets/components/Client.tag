@@ -1,6 +1,7 @@
-<Client class="client">
+<Client class="client" onkeydown={keyHandler}>
   <Screen />
   <Command />
+  <SearchModal show={this.searchModalOn} />
 
   <script>
     import { colorize, escapeHTML } from '../js/lib/html-helpers'
@@ -12,6 +13,7 @@
     this.space = false
     this.loggedIn = false
     this.playing = false
+    this.searchModalOn = false   
 
     // client config
     // todo: maybe move this to the command component
@@ -115,6 +117,57 @@
     riot.socket.on('playing', self.onPlaying.bind(this));
     riot.socket.on('quit', self.onQuit.bind(this));
 
+    this.showSearchModal = () => {
+      this.searchModalOn = true
+      this.update()
+      console.log('show modal____')
+    }
+    
+    this.keyHandler = event => {
+      const key = typeof event.which === 'undefined' ? event.keyCode : event.which;
+      console.log('keyhandker____'+key)
+      const meta = event.metaKey;
+      const ctrl = event.ctrlKey;
+      const shift = event.shiftKey;
+      const vKey = key === 86;
+      const pKey = key === 80;
+      const upKey = key === 38;
+      const downKey = key === 40;
+      const tabKey = key === 9;
 
+      // if holding control or command and not trying to paste,
+      // ignore this keypress
+      // if ((meta && !vKey) || (ctrl && !vKey)) {
+      //   return true;
+      // }
+
+      // otherwise, re-focus the input before the key is let up
+      // if (!this.inputHasFocus()) {
+      //   this.inputHasFocus(true);
+      //   // when hitting up or down and not focused,
+      //   // the keydown event doesn't get passed on
+      //   if (upKey || downKey) {
+      //     // HACK fake event object
+      //     return this.onRecall(null, { which: key });
+      //   }
+      // }
+
+      if (tabKey) {
+        const direction = shift ? -1 : 1;
+        riot.socket.emit('tab-key-press', { direction });
+        return false;
+      }
+
+      // open the search box on cmd+p (or ctrl+p) if it's not already open
+      if ((meta && pKey) || (ctrl && pKey)) {
+        // if (!this.searchViewModel()) {
+        //   this.searchViewModel(new SearchViewModel(this, this.activeSocket()));
+        // }
+        this.showSearchModal()
+        return false;
+      }
+      
+      return true;
+    }
   </script>
 </Client>

@@ -7,6 +7,7 @@ import '../components/Client.tag'
 import '../components/Command.tag'
 import '../components/Screen.tag'
 import '../components/RawHtml.tag'
+import '../components/SearchModal.tag'
 
 import '../js/lib/linkify'
 import '../js/lib/linkify-html'
