@@ -2,7 +2,7 @@
   <div class='searchbox'>
     <input id="searchStr" type='text' onKeyDown={search}>
   </div>
-  <div class='results' if={this.results.length>0}
+  <div class='results' if={this.results.length>0}>
     <ol>
       <SearchResult name={result.searchStr} objectid={result.objectid} each={result in results}/>
     </ol>
