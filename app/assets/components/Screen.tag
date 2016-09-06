@@ -22,14 +22,10 @@
 
 <Message>
   <div class="message">
-    <!-- <span class="messageAuthor"> {opts.author}</span><br/> -->
     <span> <RawHtml content={opts.text}/></RawHtml> </span>
   </div>
 
   <style>
-    .messageAuthor {
-      font-weight: bold;
-    }
     .message {
       margin: 10px 0px;
     }
