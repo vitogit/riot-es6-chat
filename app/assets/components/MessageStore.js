@@ -6,9 +6,3 @@ export default class  MessageStore {
     riot.observable(this); // Riot provides our event emitter.
   }
 }
-// var riot = require('riot');
-// function MessageStore() {
-//     riot.observable(this); // Riot provides our event emitter.
-// }
-// 
-// module.exports = MessageStore;

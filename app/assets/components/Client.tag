@@ -5,31 +5,39 @@
   <script>
     import { colorize, escapeHTML } from '../js/lib/html-helpers'
     import { boldRed, boldGreen, gray } from '../js/lib/colors'
-    
+    import { clientConfig } from './ClientConfig.js'
+
     const self = this
 
     this.space = false
     this.loggedIn = false
     this.playing = false
-    
+
+    // client config
+    this.maxLines = clientConfig.read('maxLines') || 1000
+    this.maxHistory = clientConfig.read('maxHistory') || 1000
+    this.echo = clientConfig.read('echo') || false
+    this.space = clientConfig.read('space') || false
+
+
     this.on('mount', function() {
       this.addLine(gray('Connecting...'))
     })
-    
+
     this.addLine = (line) => {
       riot.messageStore.trigger('add_message', {author: '', text: colorize(escapeHTML(line))})
     }
 
     //socket event handlers
-    this.onConnect = () => {  
+    this.onConnect = () => {
       self.addLine(boldGreen('Connected!'))
     }
-    
-    this.onConnecting = () => {  
+
+    this.onConnecting = () => {
       self.addLine(gray('Connecting...'))
     }
 
-    this.onDisconnect = () => {  
+    this.onDisconnect = () => {
       self.addLine(boldRed('Disconnected from server.'));
       self.setPrompt('');
       self.inputCallback = null;
@@ -37,25 +45,25 @@
       self.playing(false);
     }
 
-    this.onConnectFailed = () => {  
+    this.onConnectFailed = () => {
       self.addLine(boldRed('Connection to server failed.'))
     }
 
-    this.onError = () => {  
+    this.onError = () => {
       self.addLine(boldRed('An unknown error occurred.'));
     }
 
-    this.onReconnectFailed = () => {  
+    this.onReconnectFailed = () => {
       self.addLine(boldRed('Unable to reconnect to server.'));
     }
 
-    this.onReconnect = () => {  
+    this.onReconnect = () => {
     }
 
-    this.onReconnecting = () => {  
+    this.onReconnecting = () => {
     }
 
-    this.onOutput = (msg) => {  
+    this.onOutput = (msg) => {
       if (msg && msg.toString) {
         self.addLine(msg.toString());
         if (self.space) { self.addLine(' '); }
@@ -63,7 +71,7 @@
     }
 
     this.onSetPrompt = (str) => {
-      riot.messageStore.trigger('set_prompt', str)      
+      riot.messageStore.trigger('set_prompt', str)
     }
 
     this.onRequestInput = (inputs, fn) => {
@@ -105,6 +113,6 @@
     riot.socket.on('playing', self.onPlaying.bind(this));
     riot.socket.on('quit', self.onQuit.bind(this));
 
-  
+
   </script>
 </Client>
