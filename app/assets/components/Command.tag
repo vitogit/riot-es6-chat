@@ -46,6 +46,7 @@
       if (!command) { return; }
       this.echoCommand(command)
       history.add(command, this.inputType)
+
       if (this.handleClientCommand(command)) {
         // done, client handled command
       } else if (!riot.socket.connected) {
