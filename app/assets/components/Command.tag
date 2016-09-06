@@ -3,18 +3,20 @@
 
   <form onsubmit = {sendCommand}>
     <span type={this.prompt.type} id="prompt"> {this.prompt.label}</span>
-    <input autofocus id="messageText" autocomplete="off">
+    <input autofocus id="messageText" autocomplete="off" onkeydown={historyHandler} type={inputType}>
   </form>
 
   <script>
     import { colorize, escapeHTML } from '../js/lib/html-helpers'
     // import { boldRed, boldGreen, gray } from '../js/lib/colors'
+    import { history } from './History'
+    
     const self = this
     this.author = opts.author || 'me'
     this.prompt = {label: '>', type: 'text'}
     this.promptStr = opts.prompt || '>'
     this.echo = false
-    this.inputType = 'text'
+    this.inputType = 'text' //todo: this needs to change to password sometime
     this.inputCallback = null;
     
     //todo: should refactor interaction between fn and getinputfromuser
@@ -43,8 +45,7 @@
 
       if (!command) { return; }
       this.echoCommand(command)
-      // this.addToHistory(command);
-      // 
+      history.add(command, this.inputType)
       if (this.handleClientCommand(command)) {
         // done, client handled command
       } else if (!riot.socket.connected) {
@@ -59,6 +60,38 @@
 
     } 
 
+    this.historyHandler = (event) => {
+      const key = typeof event.which === 'undefined' ? event.keyCode : event.which
+      if (history.size === 0) { return true; }
+      switch (key) {
+        case 38: { // up key
+          if (history.position < history.size- 1) {
+            history.position++;
+          }
+          this.messageText.value = history.get(history.position)
+          this.update()
+          return false;
+        }
+        case 40: { // down key
+          if (history.position > -1) {
+            history.position--;
+          }
+          if (history.position >= 0) {
+            this.messageText.value = history.get(history.position)
+          } else {
+            this.messageText.value = ''
+          }
+          this.update()
+          
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+      return true;
+    }
+    
     //todo: move this functions to a lib.js ?
     this.echoCommand = (command) => {
       if (!this.echo || this.inputType === 'password') { return; }
