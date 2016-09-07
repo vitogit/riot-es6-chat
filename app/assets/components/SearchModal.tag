@@ -20,6 +20,11 @@
     this.results = []
     this.selectedIndex = 0
     this.selectionDirection = 0
+    
+    this.tags.autocomplete.on('selected', function (txt) { 
+      console.log("triggered________"+txt)
+    })
+    
 
     //todo: not the best approach sending as a callback function to autocomplete
     this.search = (str) => {
@@ -60,7 +65,6 @@
     }    
 
     this.computeActiveResult = () => {
-      console.log('compute____'+this.selectedIndex)
       if (this.results.length > 0) {
         this.results.forEach(result => { result.active = false });
         this.results[this.selectedIndex].active = true
@@ -82,7 +86,6 @@
     this.keyHandler = event => {
       const key = typeof event.which === 'undefined' ? event.keyCode : event.which
       const selectedIndex = this.selectedIndex
-      console.log("selectedIndex________"+selectedIndex)
       switch (key) {
         case 13: { // enter key
           this.openActiveResult()
@@ -110,7 +113,6 @@
             this.selectedIndex = 0
           }
           this.selectionDirection = 1
-          console.log('down___'+selectedIndex)
           this.computeActiveResult()  
           return false;
         }
@@ -130,10 +132,8 @@
   </li>
   
   <script>
-   console.log("opts________"+JSON.stringify(opts))
     this.name = opts.name
     this.active = opts.active
-    console.log('active__'+this.active)
     // this.objectid = opts.objectid
     // 
     // this.openEditor = (socket, tabsViewModel) => {
