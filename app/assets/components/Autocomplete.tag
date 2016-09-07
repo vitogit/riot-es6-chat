@@ -1,23 +1,81 @@
 <Autocomplete>
-  <input name="acinput" onkeyup="{ complete }" />
-  <ul show={ filtered.length }>
+  <input name="acinput" onkeyup="{ complete }" search={search}/>
+  <div class="results">
+    <ol show={ filtered.length }>
       <li each={ c, i in filtered } onclick="{ parent.selected }" class="{ active: parent.active==i}">{ c }</li>
-  </ul>
+    </ol>
+  </div>
+
+  <style scoped>
+    /* Search Box */
+
+    .search {
+      position: fixed;
+      top: 20vh;
+      left: 50%;
+      z-index: 9999;
+      box-sizing: border-box;
+      width: 680px;
+      margin-left: -340px;
+      border: 1px solid #2c2e30;
+    }
+
+    .search .searchbox {
+      background-color: black;
+      padding: 0.5em;
+    }
+
+    .search .searchbox input {
+      font-family: 'Fira Mono', monospace;
+      font-size: 18pt;
+      color: white;
+      background-color: black;
+      border: none;
+      width: 100%;
+    }
+
+    .search .searchbox input:focus {
+      outline: none;
+    }
+
+    .search .results {
+      border-top: 1px solid #2c2e30;
+      max-height: 300px;
+      overflow: auto;
+    }
+
+    .search .results ol {
+      margin: 0;
+      padding: 0;
+    }
+
+    .search .results ol li {
+      list-style-type: none;
+      padding: 1em 0.5em;
+      color: #545657;
+      background-color: black;
+    }
+
+    .search .results ol li.active {
+      color: white;
+      background-color: #141516;
+    }
+  </style>
 
   <script>
-        console.log("1111choices_______"+this.choices)
-  
-      this.choices = opts.choices.map(option => option.searchStr) //todo: pass this as an option
-      this.min = opts.min || 5
+      // this.choices = opts.choices.map(option => option.searchStr) //todo: pass this as an option
+      this.choices = []
+      this.min = opts.min || 2
       this.filtered  = []
       this.active = -1
       this.mode = opts.mode || 'start'
-      this.onkeyup = opts.onkeyup
+      this.search = opts.search
+        
       var self = this
 
       this.complete = (e) => {
-        console.log("complete________"+e.target.value)
-        console.log("choices_______"+this.choices)
+          this.choices = this.search(e.target.value)
+
           if(e.target.value.length < this.min) {
               this.filtered = []
               this.active = -1
