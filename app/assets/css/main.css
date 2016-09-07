@@ -180,6 +180,24 @@ body {
   font-size: 12pt;
 }
 
+/* Search Box */
+
+.search {
+  position: fixed;
+  top: 20vh;
+  left: 50%;
+  z-index: 9999;
+  box-sizing: border-box;
+  width: 680px;
+  margin-left: -340px;
+  border: 1px solid #2c2e30;
+}
+
+.search .searchbox {
+  background-color: black;
+  padding: 0.5em;
+}
+
 /* CodeMirror Overrides */
 .CodeMirror {
   font-family: 'Fira Mono', monospace !important;
