@@ -126,7 +126,6 @@
     
     this.keyHandler = event => {
       const key = typeof event.which === 'undefined' ? event.keyCode : event.which;
-      console.log('keyhandker____'+key)
       const meta = event.metaKey;
       const ctrl = event.ctrlKey;
       const shift = event.shiftKey;
