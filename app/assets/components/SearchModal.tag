@@ -1,11 +1,7 @@
 <SearchModal class="search">
+
   <div class='searchbox'>
-    <input id="searchStr" type='text' onKeyDown={search}>
-  </div>
-  <div class='results' if={this.results.length>0}>
-    <ol>
-      <SearchResult name={result.searchStr} objectid={result.objectid} each={result in results}/>
-    </ol>
+    <Autocomplete  search={this.search}/>
   </div>
   
   <script>
@@ -13,27 +9,50 @@
     this.selectedIndex = 0
     this.selectionDirection = 0
     
-    this.search = (event) => {
-      let str = this.searchStr.value
+    this.on('autocomplete_selected', function (txt) {  //autocomplete said that something was selected
+      console.log("triggered________"+txt)
+    })
+
+    //todo: not the best approach sending as a callback function to autocomplete
+    this.search = (str) => {
+      const self = this
       riot.socket.emit('search', str, results => {
-        this.selectedIndex = 0
-        this.results = results
-      });
-      return true
+          self.results = results.map(result => result.searchStr)
+      })
+      return self.results
     }
-    
+
     this.close = () => {
       console.log('close modal____')
+      //this.root.style.display = 'none'
     }
     
     this.openActiveResult = () => {
       console.log('openActiveResult___')
     }    
-      
-    this.onKeyDown = event => {
+
+    this.computeActiveResult = () => {
+      if (this.results.length > 0) {
+        this.results.forEach(result => { result.active = false });
+        this.results[this.selectedIndex].active = true
+        //todo: better way to implement this, to scrolldown?
+        // this.scrollActiveResultIntoView()
+      }
+      this.update()
+      return null;
+    }
+
+    // this.scrollActiveResultIntoView = () => {
+    //   const el = document.querySelector('.search .results li.active');
+    //   const container = document.querySelector('.search .results');
+    //   if (el && !isElementVisibleIn(el, container)) {
+    //     el.scrollIntoView(this.selectionDirection() === -1);
+    //   }
+    // }
+  
+    this.keyHandler = event => {
       const key = typeof event.which === 'undefined' ? event.keyCode : event.which
       const selectedIndex = this.selectedIndex
-
       switch (key) {
         case 13: { // enter key
           this.openActiveResult()
@@ -51,6 +70,7 @@
             this.selectedIndex = this.results.length - 1
           }
           this.selectionDirection = -1
+          this.computeActiveResult()            
           return false;
         }
         case 40: { // down key
@@ -60,9 +80,11 @@
             this.selectedIndex = 0
           }
           this.selectionDirection = 1
+          this.computeActiveResult()  
           return false;
         }
         default: {
+          this.search(event)
           return true;
         }
       }
@@ -72,13 +94,13 @@
 </SearchModal>
 
 <SearchResult>
-  <li class={this.active}>
+  <li class='{active}'>
     {this.name}
   </li>
   
   <script>
     this.name = opts.name
-    this.active = false
+    this.active = opts.active
     // this.objectid = opts.objectid
     // 
     // this.openEditor = (socket, tabsViewModel) => {

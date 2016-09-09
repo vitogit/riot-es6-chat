@@ -180,12 +180,6 @@ body {
   font-size: 12pt;
 }
 
-/* CodeMirror Overrides */
-.CodeMirror {
-  font-family: 'Fira Mono', monospace !important;
-  height: auto !important;
-}
-
 /* Search Box */
 
 .search {
@@ -204,38 +198,8 @@ body {
   padding: 0.5em;
 }
 
-.search .searchbox input {
-  font-family: 'Fira Mono', monospace;
-  font-size: 18pt;
-  color: white;
-  background-color: black;
-  border: none;
-  width: 100%;
-}
-
-.search .searchbox input:focus {
-  outline: none;
-}
-
-.search .results {
-  border-top: 1px solid #2c2e30;
-  max-height: 300px;
-  overflow: auto;
-}
-
-.search .results ol {
-  margin: 0;
-  padding: 0;
-}
-
-.search .results ol li {
-  list-style-type: none;
-  padding: 1em 0.5em;
-  color: #545657;
-  background-color: black;
-}
-
-.search .results ol li.active {
-  color: white;
-  background-color: #141516;
+/* CodeMirror Overrides */
+.CodeMirror {
+  font-family: 'Fira Mono', monospace !important;
+  height: auto !important;
 }

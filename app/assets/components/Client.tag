@@ -2,7 +2,8 @@
   <Screen />
   <Command />
   <SearchModal show={this.searchModalOn} />
-
+  
+  
   <script>
     import { colorize, escapeHTML } from '../js/lib/html-helpers'
     import { boldRed, boldGreen, gray } from '../js/lib/colors'
@@ -125,7 +126,6 @@
     
     this.keyHandler = event => {
       const key = typeof event.which === 'undefined' ? event.keyCode : event.which;
-      console.log('keyhandker____'+key)
       const meta = event.metaKey;
       const ctrl = event.ctrlKey;
       const shift = event.shiftKey;
