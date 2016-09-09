@@ -1,19 +1,7 @@
 <SearchModal class="search">
 
   <div class='searchbox'>
-    <!-- <input id="searchStr" type='text' onKeyDown={keyHandler}> -->
-    <Autocomplete  choices={results} search={this.search}/>
-    
-  </div>
-  <div class='results' if={this.results.length>0}>
-    <!-- <ol>
-      <li class={active: result.active} each={result in results}> {result.searchStr} </li>
-    </ol> -->
-    
-    <!-- <select class="searchSelect">
-      <option  class="searchOption" value={result.searchStr} each={result in results}> {result.searchStr} </option>
-    </select>     -->
-  
+    <Autocomplete  search={this.search}/>
   </div>
   
   <script>
@@ -21,43 +9,22 @@
     this.selectedIndex = 0
     this.selectionDirection = 0
     
-    this.tags.autocomplete.on('selected', function (txt) { 
+    this.on('autocomplete_selected', function (txt) {  //autocomplete said that something was selected
       console.log("triggered________"+txt)
     })
-    
 
     //todo: not the best approach sending as a callback function to autocomplete
     this.search = (str) => {
       const self = this
       riot.socket.emit('search', str, results => {
-          self.results = results.map(function(result){ 
-                      //  let newResult = {}
-                      //  newResult.active = false //add false property to everyone
-                      //  newResult.name = result.searchStr 
-                       return result.searchStr
-          });
-        });
-        
+          self.results = results.map(result => result.searchStr)
+      })
       return self.results
     }
-    // 
-    // 
-    // this.search = (event) => {
-    //   console.log('search_____'+JSON.stringify(this.searchStr))
-    //   let str = this.searchStr.value
-    //   riot.socket.emit('search', str, results => {
-    //     this.selectedIndex = 0
-    //     this.results = results.map(function(result){ 
-    //                                  result.active = false //add false property to everyone
-    //                                  return result
-    //                               });
-    //   });
-    //   this.update()
-    //   return true
-    // }
 
     this.close = () => {
       console.log('close modal____')
+      //this.root.style.display = 'none'
     }
     
     this.openActiveResult = () => {

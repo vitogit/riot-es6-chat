@@ -15,7 +15,7 @@
       background-color: black;
       border: none;
       width: 100%;
-      border: 1px solid;      
+      border: 1px solid;
     }
 
     input:focus {
@@ -105,15 +105,14 @@
       }
 
       this.selected = (selectedChoice) => {
-          this.selection(selectedChoice.item.choice)
+        this.selection(selectedChoice.item.choice)
       }
 
       this.selection = (txt) => {
         this.inputField.value = ''
         this.active = -1
         this.filtered = []
-        this.trigger('selected', txt)
-        //here we can add a second callback function
+        this.parent.trigger('autocomplete_selected', txt) //send trigger to the parent
       }
     //based on http://richardbondi.net/riot/ examples  
   </script>
